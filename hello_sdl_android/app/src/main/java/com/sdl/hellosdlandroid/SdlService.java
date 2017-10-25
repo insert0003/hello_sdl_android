@@ -22,6 +22,7 @@ import com.smartdevicelink.proxy.rpc.AddCommandResponse;
 import com.smartdevicelink.proxy.rpc.AddSubMenuResponse;
 import com.smartdevicelink.proxy.rpc.AlertManeuverResponse;
 import com.smartdevicelink.proxy.rpc.AlertResponse;
+import com.smartdevicelink.proxy.rpc.ButtonPressResponse;
 import com.smartdevicelink.proxy.rpc.ChangeRegistrationResponse;
 import com.smartdevicelink.proxy.rpc.CreateInteractionChoiceSetResponse;
 import com.smartdevicelink.proxy.rpc.DeleteCommandResponse;
@@ -33,6 +34,8 @@ import com.smartdevicelink.proxy.rpc.DialNumberResponse;
 import com.smartdevicelink.proxy.rpc.EndAudioPassThruResponse;
 import com.smartdevicelink.proxy.rpc.GenericResponse;
 import com.smartdevicelink.proxy.rpc.GetDTCsResponse;
+import com.smartdevicelink.proxy.rpc.GetInteriorVehicleDataResponse;
+import com.smartdevicelink.proxy.rpc.GetSystemCapabilityResponse;
 import com.smartdevicelink.proxy.rpc.GetVehicleDataResponse;
 import com.smartdevicelink.proxy.rpc.GetWayPointsResponse;
 import com.smartdevicelink.proxy.rpc.Image;
@@ -46,6 +49,7 @@ import com.smartdevicelink.proxy.rpc.OnCommand;
 import com.smartdevicelink.proxy.rpc.OnDriverDistraction;
 import com.smartdevicelink.proxy.rpc.OnHMIStatus;
 import com.smartdevicelink.proxy.rpc.OnHashChange;
+import com.smartdevicelink.proxy.rpc.OnInteriorVehicleData;
 import com.smartdevicelink.proxy.rpc.OnKeyboardInput;
 import com.smartdevicelink.proxy.rpc.OnLanguageChange;
 import com.smartdevicelink.proxy.rpc.OnLockScreenStatus;
@@ -63,10 +67,12 @@ import com.smartdevicelink.proxy.rpc.PutFileResponse;
 import com.smartdevicelink.proxy.rpc.ReadDIDResponse;
 import com.smartdevicelink.proxy.rpc.ResetGlobalPropertiesResponse;
 import com.smartdevicelink.proxy.rpc.ScrollableMessageResponse;
+import com.smartdevicelink.proxy.rpc.SendHapticDataResponse;
 import com.smartdevicelink.proxy.rpc.SendLocationResponse;
 import com.smartdevicelink.proxy.rpc.SetAppIconResponse;
 import com.smartdevicelink.proxy.rpc.SetDisplayLayoutResponse;
 import com.smartdevicelink.proxy.rpc.SetGlobalPropertiesResponse;
+import com.smartdevicelink.proxy.rpc.SetInteriorVehicleDataResponse;
 import com.smartdevicelink.proxy.rpc.SetMediaClockTimerResponse;
 import com.smartdevicelink.proxy.rpc.ShowConstantTbtResponse;
 import com.smartdevicelink.proxy.rpc.ShowResponse;
@@ -96,6 +102,8 @@ import com.smartdevicelink.transport.TCPTransportConfig;
 import com.smartdevicelink.transport.TransportConstants;
 import com.smartdevicelink.transport.USBTransportConfig;
 import com.smartdevicelink.util.CorrelationIdGenerator;
+
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -496,10 +504,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 
 	}
 
-	
 	/*  Vehicle Data   */
-	
-	
 	@Override
 	public void onOnPermissionsChange(OnPermissionsChange notification) {
 		Log.i(TAG, "Permision changed: " + notification);
@@ -519,7 +524,65 @@ public class SdlService extends Service implements IProxyListenerALM{
 		}
 		*/
 	}
-		
+
+	/**
+	 * Rest of the SDL callbacks from the head unit
+	 */
+
+	@Override
+	public void onGetSystemCapabilityResponse(GetSystemCapabilityResponse response) {
+		try {
+			Log.i(TAG, "GetSystemCapabilityResponse from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onSendHapticDataResponse(SendHapticDataResponse response){
+		try {
+			Log.i(TAG, "SendHapticDataResponse from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onButtonPressResponse(ButtonPressResponse response) {
+		try {
+			Log.i(TAG, "ButtonPressResponse from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onSetInteriorVehicleDataResponse(SetInteriorVehicleDataResponse response) {
+		try {
+			Log.i(TAG, "SetInteriorVehicleDataResponse from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onGetInteriorVehicleDataResponse(GetInteriorVehicleDataResponse response) {
+		try {
+			Log.i(TAG, "GetInteriorVehicleDataResponse from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onOnInteriorVehicleData(OnInteriorVehicleData response) {
+		try {
+			Log.i(TAG, "OnInteriorVehicleData from SDL: " + response.serializeJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void onSubscribeVehicleDataResponse(SubscribeVehicleDataResponse response) {
 		if(response.getSuccess()){
@@ -533,12 +596,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 		Log.i(TAG, "Vehicle data notification from SDL");
 		//TODO Put your vehicle data code here
 		//ie, notification.getSpeed().
-
 	}
-	
-	/**
-	 * Rest of the SDL callbacks from the head unit
-	 */
 	
 	@Override
 	public void onAddSubMenuResponse(AddSubMenuResponse response) {
