@@ -132,7 +132,9 @@ public class SdlService extends Service implements IProxyListenerALM{
 	private static final int TEST_COMMAND_ID 			= 1;
 
 	// TCP/IP transport config
+	// The default port is 12345
 	private static final int TCP_PORT = 12345;
+	// IP of the machine that is running SDL Core
 	private static final String DEV_MACHINE_IP_ADDRESS = "192.168.1.78";
 
 	// variable to create and call functions of the SyncProxy
@@ -271,7 +273,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 	 * @param request
 	 */
 	private void sendRpcRequest(RPCRequest request){
-		request.setCorrelationID(CorrelationIdGenerator.generateId());
 		try {
 			proxy.sendRPCRequest(request);
 		} catch (SdlException e) {
@@ -451,8 +452,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 				// If not present, upload the image
 				if(remoteFiles== null || !remoteFiles.contains(SdlService.SDL_IMAGE_FILENAME)){
 					uploadImage(R.drawable.sdl, SDL_IMAGE_FILENAME, CorrelationIdGenerator.generateId(), true);
-				}else{
-					// If the file is already present, do nothing
 				}
 			}
 		});
@@ -474,7 +473,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 				e.printStackTrace();
 			}
 		}
-
 	}
 	
 	@Override
@@ -491,7 +489,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 					showTest();
 					break;
 			}
-			//onAddCommandClicked(id);
 		}
 	}
 
@@ -679,7 +676,6 @@ public class SdlService extends Service implements IProxyListenerALM{
         Log.i(TAG, "UnsubscribeButton response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
 	}
 
-
 	@Override
 	public void onOnTBTClientState(OnTBTClientState notification) {
         Log.i(TAG, "OnTBTClientState notification from SDL: " + notification);
@@ -689,38 +685,32 @@ public class SdlService extends Service implements IProxyListenerALM{
 	public void onUnsubscribeVehicleDataResponse(
 			UnsubscribeVehicleDataResponse response) {
         Log.i(TAG, "UnsubscribeVehicleData response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onGetVehicleDataResponse(GetVehicleDataResponse response) {
         Log.i(TAG, "GetVehicleData response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onReadDIDResponse(ReadDIDResponse response) {
         Log.i(TAG, "ReadDID response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onGetDTCsResponse(GetDTCsResponse response) {
         Log.i(TAG, "GetDTCs response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 
 	@Override
 	public void onPerformAudioPassThruResponse(PerformAudioPassThruResponse response) {
         Log.i(TAG, "PerformAudioPassThru response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onEndAudioPassThruResponse(EndAudioPassThruResponse response) {
         Log.i(TAG, "EndAudioPassThru response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
@@ -731,50 +721,42 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@Override
 	public void onDeleteFileResponse(DeleteFileResponse response) {
         Log.i(TAG, "DeleteFile response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onSetAppIconResponse(SetAppIconResponse response) {
         Log.i(TAG, "SetAppIcon response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onScrollableMessageResponse(ScrollableMessageResponse response) {
         Log.i(TAG, "ScrollableMessage response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onChangeRegistrationResponse(ChangeRegistrationResponse response) {
         Log.i(TAG, "ChangeRegistration response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onSetDisplayLayoutResponse(SetDisplayLayoutResponse response) {
         Log.i(TAG, "SetDisplayLayout response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onOnLanguageChange(OnLanguageChange notification) {
         Log.i(TAG, "OnLanguageChange notification from SDL: " + notification);
-
 	}
 
 	@Override
 	public void onSliderResponse(SliderResponse response) {
         Log.i(TAG, "Slider response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 
 	@Override
 	public void onOnHashChange(OnHashChange notification) {
         Log.i(TAG, "OnHashChange notification from SDL: " + notification);
-
 	}
 
 	@Override
@@ -793,49 +775,41 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@Override
 	public void onSystemRequestResponse(SystemRequestResponse response) {
         Log.i(TAG, "SystemRequest response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onOnKeyboardInput(OnKeyboardInput notification) {
         Log.i(TAG, "OnKeyboardInput notification from SDL: " + notification);
-
 	}
 
 	@Override
 	public void onOnTouchEvent(OnTouchEvent notification) {
         Log.i(TAG, "OnTouchEvent notification from SDL: " + notification);
-
 	}
 
 	@Override
 	public void onDiagnosticMessageResponse(DiagnosticMessageResponse response) {
         Log.i(TAG, "DiagnosticMessage response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onOnStreamRPC(OnStreamRPC notification) {
         Log.i(TAG, "OnStreamRPC notification from SDL: " + notification);
-
 	}
 
 	@Override
 	public void onStreamRPCResponse(StreamRPCResponse response) {
         Log.i(TAG, "StreamRPC response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onDialNumberResponse(DialNumberResponse response) {
         Log.i(TAG, "DialNumber response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onSendLocationResponse(SendLocationResponse response) {
         Log.i(TAG, "SendLocation response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
@@ -851,19 +825,16 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@Override
 	public void onShowConstantTbtResponse(ShowConstantTbtResponse response) {
         Log.i(TAG, "ShowConstantTbt response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onAlertManeuverResponse(AlertManeuverResponse response) {
         Log.i(TAG, "AlertManeuver response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
 	public void onUpdateTurnListResponse(UpdateTurnListResponse response) {
         Log.i(TAG, "UpdateTurnList response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
-
 	}
 
 	@Override
