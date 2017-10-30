@@ -133,8 +133,8 @@ public class SdlService extends Service implements IProxyListenerALM{
 
 	// TCP/IP transport config
 	// The default port is 12345
+	// The IP is of the machine that is running SDL Core
 	private static final int TCP_PORT = 12345;
-	// IP of the machine that is running SDL Core
 	private static final String DEV_MACHINE_IP_ADDRESS = "192.168.1.78";
 
 	// variable to create and call functions of the SyncProxy
@@ -361,8 +361,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 			}
 			// Other HMI (Show, PerformInteraction, etc.) would go here
 		}
-		
-		
+
 		if(!notification.getHmiLevel().equals(HMILevel.HMI_NONE)
 				&& firstNonHmiNone){
 			sendCommands();
@@ -376,7 +375,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 				uploadImages();
 			}
 		}
-		
 	}
 
 	/**
@@ -702,7 +700,6 @@ public class SdlService extends Service implements IProxyListenerALM{
         Log.i(TAG, "GetDTCs response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
 	}
 
-
 	@Override
 	public void onPerformAudioPassThruResponse(PerformAudioPassThruResponse response) {
         Log.i(TAG, "PerformAudioPassThru response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
@@ -752,7 +749,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 	public void onSliderResponse(SliderResponse response) {
         Log.i(TAG, "Slider response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
 	}
-
 
 	@Override
 	public void onOnHashChange(OnHashChange notification) {
