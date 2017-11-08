@@ -103,13 +103,11 @@ import com.smartdevicelink.transport.TransportConstants;
 import com.smartdevicelink.transport.USBTransportConfig;
 import com.smartdevicelink.util.CorrelationIdGenerator;
 
-import org.json.JSONException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SdlService extends Service implements IProxyListenerALM{
@@ -123,7 +121,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 	private static final String SDL_IMAGE_FILENAME  	= "sdl_full_image.png";
 	private int iconCorrelationId;
 
-	List<String> remoteFiles;
+	private List<String> remoteFiles;
 	
 	private static final String WELCOME_SHOW 			= "Welcome to HelloSDL";
 	private static final String WELCOME_SPEAK 			= "Welcome to Hello S D L";
@@ -141,10 +139,11 @@ public class SdlService extends Service implements IProxyListenerALM{
 	private SdlProxyALM proxy = null;
 
 	private boolean firstNonHmiNone = true;
+	@SuppressWarnings("unused")
 	private boolean isVehicleDataSubscribed = false;
 
 	private String lockScreenUrlFromCore = null;
-	private LockScreenManager lockScreenManager = new LockScreenManager();
+	private final LockScreenManager lockScreenManager = new LockScreenManager();
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -155,7 +154,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 	public void onCreate() {
         Log.d(TAG, "onCreate");
 		super.onCreate();
-		remoteFiles = new ArrayList<String>();
+		remoteFiles = new ArrayList<>();
 	}
 
 	@Override
@@ -173,11 +172,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 		super.onDestroy();
 	}
 
-	public SdlProxyALM getProxy() {
-		return proxy;
-	}
-
-	public void startProxy(boolean forceConnect, Intent intent) {
+	private void startProxy(boolean forceConnect, Intent intent) {
         Log.i(TAG, "Trying to start proxy");
 		if (proxy == null) {
 			try {
@@ -204,10 +199,11 @@ public class SdlService extends Service implements IProxyListenerALM{
 						if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.HONEYCOMB) {
 							Log.e(TAG, "Unable to start proxy. Android OS version is too low");
 							return;
+						}else {
+							//We have a usb transport
+							transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY));
+							Log.d(TAG, "USB created.");
 						}
-						//We have a usb transport
-						transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY));
-						Log.d(TAG, "USB created.");
 					}
 				}
 				if(transport != null) {
@@ -225,7 +221,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 		}
 	}
 
-	public void disposeSyncProxy() {
+	private void disposeSyncProxy() {
 		LockScreenActivity.updateLockScreenStatus(LockScreenStatus.OFF);
 
 		if (proxy != null) {
@@ -245,7 +241,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 	/**
 	 * Will show a sample test message on screen as well as speak a sample test message
 	 */
-	public void showTest(){
+	private void showTest(){
 		try {
 			proxy.show(TEST_COMMAND_NAME, "Command has been selected", TextAlignment.CENTERED, CorrelationIdGenerator.generateId());
 			proxy.speak(TEST_COMMAND_NAME, CorrelationIdGenerator.generateId());
@@ -257,20 +253,19 @@ public class SdlService extends Service implements IProxyListenerALM{
 	/**
 	 *  Add commands for the app on SDL.
 	 */
-	public void sendCommands(){
+	private void sendCommands(){
 		AddCommand command = new AddCommand();
 		MenuParams params = new MenuParams();
 		params.setMenuName(TEST_COMMAND_NAME);
-		command = new AddCommand();
 		command.setCmdID(TEST_COMMAND_ID);
 		command.setMenuParams(params);
-		command.setVrCommands(Arrays.asList(new String[]{TEST_COMMAND_NAME}));
+		command.setVrCommands(Collections.singletonList(TEST_COMMAND_NAME));
 		sendRpcRequest(command);
 	}
 
 	/**
 	 * Sends an RPC Request to the connected head unit. Automatically adds a correlation id.
-	 * @param request
+	 * @param request the rpc request that is to be sent to the module
 	 */
 	private void sendRpcRequest(RPCRequest request){
 		try {
@@ -281,9 +276,8 @@ public class SdlService extends Service implements IProxyListenerALM{
 	}
 	/**
 	 * Sends the app icon through the uploadImage method with correct params
-	 * @throws SdlException
 	 */
-	private void sendIcon() throws SdlException {
+	private void sendIcon(){
 		iconCorrelationId = CorrelationIdGenerator.generateId();
 		uploadImage(R.mipmap.ic_launcher, ICON_FILENAME, iconCorrelationId, true);
 	}
@@ -295,7 +289,8 @@ public class SdlService extends Service implements IProxyListenerALM{
 	 * @param correlationId the correlation id to be used with this request. Helpful for monitoring putfileresponses
 	 * @param isPersistent tell the system if the file should stay or be cleared out after connection.
 	 */
-	private void uploadImage(int resource, String imageName,int correlationId, boolean isPersistent){
+	@SuppressWarnings("SameParameterValue")
+	private void uploadImage(int resource, String imageName, int correlationId, boolean isPersistent){
 		PutFile putFile = new PutFile();
 		putFile.setFileType(FileType.GRAPHIC_PNG);
 		putFile.setSdlFileName(imageName);
@@ -432,11 +427,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 				// Check the mutable set for the AppIcon
 				// If not present, upload the image
 				if(remoteFiles== null || !remoteFiles.contains(SdlService.ICON_FILENAME)){
-					try {
-						sendIcon();
-					} catch (SdlException e) {
-						e.printStackTrace();
-					}
+					sendIcon();
 				}else{
 					// If the file is already present, send the SetAppIcon request
 					try {
