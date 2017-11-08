@@ -525,60 +525,6 @@ public class SdlService extends Service implements IProxyListenerALM{
 	 */
 
 	@Override
-	public void onGetSystemCapabilityResponse(GetSystemCapabilityResponse response) {
-		try {
-			Log.i(TAG, "GetSystemCapabilityResponse from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onSendHapticDataResponse(SendHapticDataResponse response){
-		try {
-			Log.i(TAG, "SendHapticDataResponse from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onButtonPressResponse(ButtonPressResponse response) {
-		try {
-			Log.i(TAG, "ButtonPressResponse from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onSetInteriorVehicleDataResponse(SetInteriorVehicleDataResponse response) {
-		try {
-			Log.i(TAG, "SetInteriorVehicleDataResponse from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onGetInteriorVehicleDataResponse(GetInteriorVehicleDataResponse response) {
-		try {
-			Log.i(TAG, "GetInteriorVehicleDataResponse from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onOnInteriorVehicleData(OnInteriorVehicleData response) {
-		try {
-			Log.i(TAG, "OnInteriorVehicleData from SDL: " + response.serializeJSON());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void onSubscribeVehicleDataResponse(SubscribeVehicleDataResponse response) {
 		if(response.getSuccess()){
 			Log.i(TAG, "Subscribed to vehicle data");
@@ -870,6 +816,37 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@Override
 	public void onGenericResponse(GenericResponse response) {
         Log.i(TAG, "Generic response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onGetSystemCapabilityResponse(GetSystemCapabilityResponse response) {
+		Log.i(TAG, "GetSystemCapabilityResponse from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onSendHapticDataResponse(SendHapticDataResponse response){
+		Log.i(TAG, "SendHapticData response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onButtonPressResponse(ButtonPressResponse response) {
+		Log.i(TAG, "ButtonPress response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onSetInteriorVehicleDataResponse(SetInteriorVehicleDataResponse response) {
+		Log.i(TAG, "SetInteriorVehicleData response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onGetInteriorVehicleDataResponse(GetInteriorVehicleDataResponse response) {
+		Log.i(TAG, "GetInteriorVehicleData response from SDL: " + response.getResultCode().name() + " Info: " + response.getInfo());
+	}
+
+	@Override
+	public void onOnInteriorVehicleData(OnInteriorVehicleData notification) {
+		Log.i(TAG, "OnInteriorVehicleData from SDL: " + notification);
+
 	}
 
 }
