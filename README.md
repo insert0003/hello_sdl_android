@@ -4,7 +4,7 @@ This app acts as a reference Android app using the [4.4.+ SDL SDK](https://githu
 
 ### Installing
 
-Once cloned, perform a Gradle Sync. Thats it :rocket:
+Once cloned, perform a Gradle Sync. That's it :rocket:
 
 ### Documentation
 
