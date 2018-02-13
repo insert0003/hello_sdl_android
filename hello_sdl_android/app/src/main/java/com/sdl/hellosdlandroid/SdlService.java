@@ -227,11 +227,11 @@ public class SdlService extends Service implements IProxyListenerALM{
 		if (proxy != null) {
 			try {
 				proxy.dispose();
-			} catch (SdlException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				proxy = null;
 			}
-			proxy = null;
-
 		}
 		this.firstNonHmiNone = true;
 		this.isVehicleDataSubscribed = false;
