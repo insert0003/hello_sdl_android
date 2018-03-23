@@ -58,6 +58,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.smartdevicelink:sdl_android:4.4.0'
+    compile 'com.smartdevicelink:sdl_android:RC2-4.5.0'
     testCompile 'junit:junit:4.12'
 }
