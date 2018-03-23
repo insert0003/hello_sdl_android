@@ -1,11 +1,14 @@
 package com.sdl.hellosdlandroid;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -129,6 +132,8 @@ public class SdlService extends Service implements IProxyListenerALM{
 	private static final String TEST_COMMAND_NAME 		= "Test Command";
 	private static final int TEST_COMMAND_ID 			= 1;
 
+	private static final int FOREGROUND_SERVICE_ID = 849;
+
 	// TCP/IP transport config
 	// The default port is 12345
 	// The IP is of the machine that is running SDL Core
@@ -155,6 +160,22 @@ public class SdlService extends Service implements IProxyListenerALM{
         Log.d(TAG, "onCreate");
 		super.onCreate();
 		remoteFiles = new ArrayList<>();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			enterForeground();
+		}
+	}
+
+	@SuppressLint("NewApi")
+	public void enterForeground() {
+		Notification notification = new Notification.Builder(this)
+				.setContentTitle("SmartDeviceLink")
+				.setContentText(getString(R.string.app_name))
+				.setSmallIcon(R.drawable.ic_sdl)
+				.setTicker("SmartDeviceLink")
+				.setPriority(Notification.PRIORITY_DEFAULT)
+				.build();
+		startForeground(FOREGROUND_SERVICE_ID, notification);
 	}
 
 	@Override
