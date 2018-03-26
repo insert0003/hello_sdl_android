@@ -129,7 +129,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 
 	private static final String TEST_COMMAND1_NAME      = "Test Command 1";
 	private static final int TEST_COMMAND1_ID           = 1;
-	private static final String TEST_SUB_MENU_NAME = "Test SubMenu";
+	private static final String TEST_SUB_MENU_NAME      = "Test SubMenu";
 	private static final int TEST_SUB_MENU_ID           = 100;
 	private static final String TEST_COMMAND2_NAME      = "Test Command 2";
 	private static final int TEST_COMMAND2_ID           = 2;
