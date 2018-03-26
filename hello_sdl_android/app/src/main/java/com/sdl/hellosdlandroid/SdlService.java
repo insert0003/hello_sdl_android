@@ -19,6 +19,7 @@ import com.smartdevicelink.proxy.callbacks.OnServiceNACKed;
 import com.smartdevicelink.proxy.interfaces.IProxyListenerALM;
 import com.smartdevicelink.proxy.rpc.AddCommand;
 import com.smartdevicelink.proxy.rpc.AddCommandResponse;
+import com.smartdevicelink.proxy.rpc.AddSubMenu;
 import com.smartdevicelink.proxy.rpc.AddSubMenuResponse;
 import com.smartdevicelink.proxy.rpc.AlertManeuverResponse;
 import com.smartdevicelink.proxy.rpc.AlertResponse;
@@ -125,9 +126,14 @@ public class SdlService extends Service implements IProxyListenerALM{
 	
 	private static final String WELCOME_SHOW 			= "Welcome to HelloSDL";
 	private static final String WELCOME_SPEAK 			= "Welcome to Hello S D L";
-	
-	private static final String TEST_COMMAND_NAME 		= "Test Command";
-	private static final int TEST_COMMAND_ID 			= 1;
+
+	private static final String TEST_COMMAND1_NAME      = "Test Command 1";
+	private static final int TEST_COMMAND1_ID           = 1;
+	private static final String TEST_SUB_MENU_NAME = "Test SubMenu";
+	private static final int TEST_SUB_MENU_ID           = 100;
+	private static final String TEST_COMMAND2_NAME      = "Test Command 2";
+	private static final int TEST_COMMAND2_ID           = 2;
+
 
 	// TCP/IP transport config
 	// The default port is 12345
@@ -241,10 +247,10 @@ public class SdlService extends Service implements IProxyListenerALM{
 	/**
 	 * Will show a sample test message on screen as well as speak a sample test message
 	 */
-	private void showTest(){
+	private void showTest(String commandName){
 		try {
-			proxy.show(TEST_COMMAND_NAME, "Command has been selected", TextAlignment.CENTERED, CorrelationIdGenerator.generateId());
-			proxy.speak(TEST_COMMAND_NAME, CorrelationIdGenerator.generateId());
+			proxy.show(commandName, "Command has been selected", TextAlignment.CENTERED, CorrelationIdGenerator.generateId());
+			proxy.speak(commandName, CorrelationIdGenerator.generateId());
 		} catch (SdlException e) {
 			e.printStackTrace();
 		}
@@ -254,13 +260,38 @@ public class SdlService extends Service implements IProxyListenerALM{
 	 *  Add commands for the app on SDL.
 	 */
 	private void sendCommands(){
-		AddCommand command = new AddCommand();
-		MenuParams params = new MenuParams();
-		params.setMenuName(TEST_COMMAND_NAME);
-		command.setCmdID(TEST_COMMAND_ID);
-		command.setMenuParams(params);
-		command.setVrCommands(Collections.singletonList(TEST_COMMAND_NAME));
-		sendRpcRequest(command);
+		// Add a menu item directly to the root level
+		AddCommand command1 = new AddCommand();
+		MenuParams params1 = new MenuParams();
+		params1.setMenuName(TEST_COMMAND1_NAME);
+		command1.setCmdID(TEST_COMMAND1_ID);
+		command1.setMenuParams(params1);
+		command1.setVrCommands(Collections.singletonList(TEST_COMMAND1_NAME));
+		sendRpcRequest(command1);
+
+
+		// Add a sub menu to the root level, and add a menu item under that sub menu
+		AddSubMenu addSubMenu = new AddSubMenu();
+		addSubMenu.setMenuID(TEST_SUB_MENU_ID);
+		addSubMenu.setMenuName(TEST_SUB_MENU_NAME);
+		addSubMenu.setOnRPCResponseListener(new OnRPCResponseListener() {
+			@Override
+			public void onResponse(int correlationId, RPCResponse response) {
+				if(response.getSuccess()){
+					AddCommand command2 = new AddCommand();
+					MenuParams params2 = new MenuParams();
+					params2.setParentID(TEST_SUB_MENU_ID);
+					params2.setMenuName(TEST_COMMAND2_NAME);
+					command2.setCmdID(TEST_COMMAND2_ID);
+					command2.setMenuParams(params2);
+					command2.setVrCommands(Collections.singletonList(TEST_COMMAND2_NAME));
+					sendRpcRequest(command2);
+				} else{
+					Log.i(TAG, "AddSubMenu request rejected.");
+				}
+			}
+		});
+		sendRpcRequest(addSubMenu);
 	}
 
 	/**
@@ -474,8 +505,11 @@ public class SdlService extends Service implements IProxyListenerALM{
 		Integer id = notification.getCmdID();
 		if(id != null){
 			switch(id){
-				case TEST_COMMAND_ID:
-					showTest();
+				case TEST_COMMAND1_ID:
+					showTest(TEST_COMMAND1_NAME);
+					break;
+				case TEST_COMMAND2_ID:
+					showTest(TEST_COMMAND2_NAME);
 					break;
 			}
 		}
