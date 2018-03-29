@@ -132,7 +132,7 @@ public class SdlService extends Service implements IProxyListenerALM{
 	private static final String TEST_COMMAND_NAME 		= "Test Command";
 	private static final int TEST_COMMAND_ID 			= 1;
 
-	private static final int FOREGROUND_SERVICE_ID = 849;
+	private static final int FOREGROUND_SERVICE_ID = 111;
 
 	// TCP/IP transport config
 	// The default port is 12345
@@ -169,10 +169,9 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@SuppressLint("NewApi")
 	public void enterForeground() {
 		Notification notification = new Notification.Builder(this)
-				.setContentTitle("SmartDeviceLink")
-				.setContentText(getString(R.string.app_name))
+				.setContentTitle(getString(R.string.app_name))
+				.setContentText("Connected through SDL")
 				.setSmallIcon(R.drawable.ic_sdl)
-				.setTicker("SmartDeviceLink")
 				.setPriority(Notification.PRIORITY_DEFAULT)
 				.build();
 		startForeground(FOREGROUND_SERVICE_ID, notification);
@@ -190,6 +189,9 @@ public class SdlService extends Service implements IProxyListenerALM{
 	@Override
 	public void onDestroy() {
 		disposeSyncProxy();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			stopForeground(true);
+		}
 		super.onDestroy();
 	}
 

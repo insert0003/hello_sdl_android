@@ -52,8 +52,6 @@
                 <action android:name="com.smartdevicelink.router.service"/>
             </intent-filter>
             <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
-            <!-- Optional. Will default to false -->
-            <meta-data android:name="@string/sdl_router_service_is_custom_name" android:value="false" />
         </service>
         <receiver
             android:name=".SdlReceiver"
