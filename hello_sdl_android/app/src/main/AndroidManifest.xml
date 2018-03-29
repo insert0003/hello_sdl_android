@@ -47,8 +47,12 @@
         <service
             android:name=".SdlRouterService"
             android:exported="true"
-            android:process="com.smartdevicelink.router"
-            tools:ignore="ExportedService"/>
+            android:process="com.smartdevicelink.router">
+            <intent-filter>
+                <action android:name="com.smartdevicelink.router.service"/>
+            </intent-filter>
+            <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+        </service>
         <receiver
             android:name=".SdlReceiver"
             android:enabled="true"
