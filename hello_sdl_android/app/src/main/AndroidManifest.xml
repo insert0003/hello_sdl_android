@@ -60,10 +60,7 @@
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.smartdevicelink.USB_ACCESSORY_ATTACHED"/> <!--For AOA -->
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
-                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
                 <action android:name="sdl.router.startservice" />
             </intent-filter>
         </receiver>
