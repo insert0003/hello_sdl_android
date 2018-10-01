@@ -18,31 +18,31 @@ android {
     }
     flavorDimensions "default"
     productFlavors{
-        mbt_high {
-            buildConfigField 'String', 'TRANSPORT', '"MBT"'
+        multiplex_high {
+            buildConfigField 'String', 'TRANSPORT', '"MULTI"'
             buildConfigField 'String', 'SECURITY', '"HIGH"'
         }
-        mbt_med {
-            buildConfigField 'String', 'TRANSPORT', '"MBT"'
+        multiplex_med {
+            buildConfigField 'String', 'TRANSPORT', '"MULTI"'
             buildConfigField 'String', 'SECURITY', '"MED"'
         }
-        mbt_low {
-            buildConfigField 'String', 'TRANSPORT', '"MBT"'
+        multiplex_low {
+            buildConfigField 'String', 'TRANSPORT', '"MULTI"'
             buildConfigField 'String', 'SECURITY', '"LOW"'
         }
-        mbt_off {
-            buildConfigField 'String', 'TRANSPORT', '"MBT"'
+        multiplex_off {
+            buildConfigField 'String', 'TRANSPORT', '"MULTI"'
             buildConfigField 'String', 'SECURITY', '"OFF"'
         }
-        lbt {
+        dep_lbt {
             buildConfigField 'String', 'TRANSPORT', '"LBT"'
             buildConfigField 'String', 'SECURITY', '"OFF"'
         }
-        tcp {
+        debug_tcp {
             buildConfigField 'String', 'TRANSPORT', '"TCP"'
             buildConfigField 'String', 'SECURITY', '"OFF"'
         }
-        usb {
+        dep_usb {
             buildConfigField 'String', 'TRANSPORT', '"USB"'
             buildConfigField 'String', 'SECURITY', '"OFF"'
         }
@@ -58,6 +58,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.smartdevicelink:sdl_android:4.+'
+    implementation project(path: ':sdl_android')
     testImplementation 'junit:junit:4.12'
 }
