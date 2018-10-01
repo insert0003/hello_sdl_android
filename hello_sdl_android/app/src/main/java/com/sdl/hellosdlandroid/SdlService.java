@@ -63,7 +63,7 @@ public class SdlService extends Service {
 	private static final String DEV_MACHINE_IP_ADDRESS = "192.168.1.78";
 
 	// variable to create and call functions of the SyncProxy
-	private SdlManager proxy = null;
+	private SdlManager sdlManager = null;
 
 	@SuppressWarnings("unused")
 	private boolean isVehicleDataSubscribed = false;
@@ -110,7 +110,7 @@ public class SdlService extends Service {
 
 	private void startProxy(Intent intent) {
 		// This logic is to select the correct transport and security levels defined in the selected build flavor
-		if (proxy == null) {
+		if (sdlManager == null) {
 			Log.i(TAG, "Starting SDL Proxy");
 			BaseTransportConfig transport = null;
 			if (BuildConfig.TRANSPORT.equals("MULTI")) {
@@ -152,7 +152,7 @@ public class SdlService extends Service {
 				@Override
 				public void onStart() {
 					// HMI Status Listener
-					proxy.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
+					sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
 						@Override
 						public void onNotified(RPCNotification notification) {
 							OnHMIStatus status = (OnHMIStatus) notification;
@@ -168,7 +168,7 @@ public class SdlService extends Service {
 					});
 
 					// Menu Selected Listener
-					proxy.addOnRPCNotificationListener(FunctionID.ON_COMMAND, new OnRPCNotificationListener() {
+					sdlManager.addOnRPCNotificationListener(FunctionID.ON_COMMAND, new OnRPCNotificationListener() {
 						@Override
 						public void onNotified(RPCNotification notification) {
 							OnCommand command = (OnCommand) notification;
@@ -206,8 +206,8 @@ public class SdlService extends Service {
 			builder.setAppTypes(appType);
 			builder.setTransportType(transport);
 			builder.setAppIcon(appIcon);
-			proxy = builder.build();
-			proxy.start();
+			sdlManager = builder.build();
+			sdlManager.start();
 		}
 	}
 
@@ -237,11 +237,11 @@ public class SdlService extends Service {
 	 * and finish with commit() when we are done.
 	 */
 	private void performWelcomeShow() {
-		proxy.getScreenManager().beginTransaction();
-		proxy.getScreenManager().setTextField1(APP_NAME);
-		proxy.getScreenManager().setTextField2(WELCOME_SHOW);
-		proxy.getScreenManager().setPrimaryGraphic(new SdlArtwork(SDL_IMAGE_FILENAME, FileType.GRAPHIC_PNG, R.drawable.sdl, true));
-		proxy.getScreenManager().commit(new CompletionListener() {
+		sdlManager.getScreenManager().beginTransaction();
+		sdlManager.getScreenManager().setTextField1(APP_NAME);
+		sdlManager.getScreenManager().setTextField2(WELCOME_SHOW);
+		sdlManager.getScreenManager().setPrimaryGraphic(new SdlArtwork(SDL_IMAGE_FILENAME, FileType.GRAPHIC_PNG, R.drawable.sdl, true));
+		sdlManager.getScreenManager().commit(new CompletionListener() {
 			@Override
 			public void onComplete(boolean success) {
 				if (success){
@@ -255,10 +255,10 @@ public class SdlService extends Service {
 	 * Will show a sample test message on screen as well as speak a sample test message
 	 */
 	private void showTest(){
-		proxy.getScreenManager().beginTransaction();
-		proxy.getScreenManager().setTextField1("Command has been selected");
-		proxy.getScreenManager().setTextField2("");
-		proxy.getScreenManager().commit(null);
+		sdlManager.getScreenManager().beginTransaction();
+		sdlManager.getScreenManager().setTextField1("Command has been selected");
+		sdlManager.getScreenManager().setTextField2("");
+		sdlManager.getScreenManager().commit(null);
 
 		sendRpcRequest(new Speak(TTSChunkFactory.createSimpleTTSChunks(TEST_COMMAND_NAME)));
 	}
@@ -269,7 +269,7 @@ public class SdlService extends Service {
 	 */
 	private void sendRpcRequest(RPCRequest request){
 		try {
-			proxy.sendRPC(request);
+			sdlManager.sendRPC(request);
 		} catch (SdlException e) {
 			e.printStackTrace();
 		}
